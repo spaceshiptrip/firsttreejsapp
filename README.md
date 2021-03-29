@@ -18,3 +18,6 @@ function createTextureMesh(geometry, image, otherImage) {
         return new THREE.Mesh(geometry, material);
     }
 ```
+
+### sources
+1. Mars image maps: http://planetpixelemporium.com/mars.html#
