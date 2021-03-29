@@ -8,7 +8,8 @@ import { PointLightHelper } from 'three';
 // Loading
 const textureLoader = new THREE.TextureLoader();
 
-const normalTexture = textureLoader.load('/textures/NormalMap.png');
+// const normalTexture = textureLoader.load('/textures/NormalMap.png');
+const normalTexture = textureLoader.load('/textures/mars_1k_normal.jpg');
 
 // Debug
 const gui = new dat.GUI()
