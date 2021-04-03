@@ -37,6 +37,13 @@ material.color = new THREE.Color(0x292929)
 const sphere = new THREE.Mesh(geometry,material)
 scene.add(sphere)
 
+
+// this is the Mars Map
+// const marsGeom = new THREE.SphereBufferGeometry( 0.5, 64, 64);
+// const marsSphere = createTextureMesh(marsGeom, 
+
+
+
 // Lights
 
 const pointLight = new THREE.PointLight(0xffffff, 0.1)
@@ -157,6 +164,20 @@ function onDocumentMouseMove (event) {
     mouseX = (event.clientX - windowHalfX)
     mouseY = (event.clientY - windowHalfY)
 }
+
+function createTextureMesh(geometry, image, otherImage) {
+    let map = new THREE.TextureLoader().load(image);
+    let normalMap = new THREE.TextureLoader().load(otherImage);
+
+    let material = new THREE.MeshPhongMaterial();
+        material.map = map;//Bottom mapping
+        material.normalMap = normalMap;//normal map
+        material.normalScale = new THREE.Vector2(0.3, 0.3);//Concavo convex degree
+
+    return new THREE.Mesh(geometry, material);
+}
+
+
 
 const updateSphere = (event) => {
     sphere.position.y = window.scrollY * 0.001;
