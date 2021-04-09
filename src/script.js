@@ -28,6 +28,7 @@ const scene = new THREE.Scene()
 const geometry = new THREE.SphereBufferGeometry(0.5, 64, 64)
 
 const gltbModel = 'textures/Mars/Phobos_1_1000.glb';
+const deimosGLTF = 'textures/Mars/Deimos_1_1000.glb';
 // const gltbModel = 'src/assets/Ingenuity_v3.glb';
 
 // --- data input ---
@@ -36,10 +37,13 @@ let xPosition = -3.2;
 let zPosition = 3.5;
 
 let theta = -10;
+let deimosTheta = -10;
 // -----         -----
 
 let model = new THREE.Object3D();
 let c, size; // model center and size
+
+let deimosModel = new THREE.Object3D();
 
 let x0 = xPosition;
 let dx;
@@ -153,6 +157,38 @@ phobosShape.load(gltbModel, (gltf) => {
     model.receiveShadow = true;
 
     scene.add(model);
+});
+
+
+const deimosShape = new GLTFLoader();
+deimosShape.load(deimosGLTF, (gltf) => {
+    gltf.scene.traverse(child => {
+
+        if (child.material) child.material.metalness = 0;
+        if (child.isMesh) { child.castShadow = true; }
+        if (child.isMesh) { child.receiveShadow = true; }
+
+
+    });
+
+    gltf.scene.scale.multiplyScalar(0.005);
+
+    const box = new THREE.Box3().setFromObject(gltf.scene);
+    const boxHelper = new THREE.Box3Helper(box, 0xffff00);
+    // scene.add( boxHelper );
+
+    c = box.getCenter(new THREE.Vector3());
+    size = box.getSize(new THREE.Vector3());
+
+    gltf.scene.position.set(-c.x, size.y / 2 - c.y, -c.z);
+
+    deimosModel.add(gltf.scene);
+
+    // model.add(root);
+    deimosModel.castShadow = true;
+    deimosModel.receiveShadow = true;
+
+    scene.add(deimosModel);
 });
 
 
@@ -276,6 +312,14 @@ const tick = () => {
     // model.position.y = modelRadius * Math.sin(theta);
     // model.position.y = Math.sin(1.042);
     model.position.z = modelRadius * Math.sin(theta);
+
+
+    let deimosOrbitRadius = 3;
+    deimosModel.rotation.y = yRotation;
+    deimosTheta -=0.001;
+    deimosModel.position.x = deimosOrbitRadius * Math.cos(deimosTheta);
+    deimosModel.position.z = deimosOrbitRadius * Math.sin(deimosTheta);
+
 
     // Update Orbital Controls
     // controls.update()
