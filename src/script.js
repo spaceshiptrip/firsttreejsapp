@@ -4,6 +4,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
 import { PointLightHelper } from 'three';
 
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+
+
 
 // Loading
 const textureLoader = new THREE.TextureLoader();
@@ -22,7 +25,25 @@ const scene = new THREE.Scene()
 
 // Objects
 // const geometry = new THREE.TorusGeometry( .7, .2, 16, 100 );
-const geometry = new THREE.SphereBufferGeometry( 0.5, 64, 64)
+const geometry = new THREE.SphereBufferGeometry(0.5, 64, 64)
+
+const gltbModel = 'textures/Mars/Phobos_1_1000.glb';
+// const gltbModel = 'src/assets/Ingenuity_v3.glb';
+
+// --- data input ---
+let yRotation = 0;
+let xPosition = -3.2;
+let zPosition = 3.5;
+
+let theta = -10;
+// -----         -----
+
+let model = new THREE.Object3D();
+let c, size; // model center and size
+
+let x0 = xPosition;
+let dx;
+
 
 // Materials
 
@@ -39,8 +60,10 @@ material.color = new THREE.Color(0x292929)
 
 
 // this is the Mars Map
-const marsGeom = new THREE.SphereBufferGeometry( 0.5, 64, 64);
+const marsGeom = new THREE.SphereBufferGeometry(0.5, 64, 64);
 const marsSphere = createTextureMesh(marsGeom, '/textures/mars_1k_color.jpg', '/textures/mars_1k_normal.jpg')
+marsSphere.receiveShadow = true;
+marsSphere.castShadow = true;
 
 scene.add(marsSphere);
 
@@ -97,7 +120,34 @@ scene.add(pointLightHelper)
 // const pointLightHelper2 = new THREE.PointLightHelper(pointLight3, 1);
 // scene.add(pointLightHelper2)
 
+// GLTF Loader for moons of Mars
+const phobosShape = new GLTFLoader();
+phobosShape.load(gltbModel, (gltf) => {
+    gltf.scene.traverse(child => {
 
+        if (child.material) child.material.metalness = 0;
+
+    });
+
+    gltf.scene.scale.multiplyScalar(0.001);
+
+    const box = new THREE.Box3().setFromObject(gltf.scene);
+    const boxHelper = new THREE.Box3Helper(box, 0xffff00);
+    // scene.add( boxHelper );
+
+    c = box.getCenter(new THREE.Vector3());
+    size = box.getSize(new THREE.Vector3());
+
+    gltf.scene.position.set(-c.x, size.y / 2 - c.y, -c.z);
+
+    model.add(gltf.scene);
+
+    // model.add(root);
+    model.castShadow = true;
+    model.receiveShadow = true;
+
+    scene.add(model);
+});
 
 
 /**
@@ -108,8 +158,7 @@ const sizes = {
     height: window.innerHeight
 }
 
-window.addEventListener('resize', () =>
-{
+window.addEventListener('resize', () => {
     // Update sizes
     sizes.width = window.innerWidth
     sizes.height = window.innerHeight
@@ -146,6 +195,8 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(sizes.width, sizes.height)
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 /**
  * Animate
@@ -162,7 +213,7 @@ let targetY = 0;
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
 
-function onDocumentMouseMove (event) {
+function onDocumentMouseMove(event) {
     mouseX = (event.clientX - windowHalfX)
     mouseY = (event.clientY - windowHalfY)
 }
@@ -172,9 +223,9 @@ function createTextureMesh(geometry, image, otherImage) {
     let normalMap = new THREE.TextureLoader().load(otherImage);
 
     let material = new THREE.MeshPhongMaterial();
-        material.map = map;//Bottom mapping
-        material.normalMap = normalMap;//normal map
-        material.normalScale = new THREE.Vector2(0.3, 0.3);//Concavo convex degree
+    material.map = map;//Bottom mapping
+    material.normalMap = normalMap;//normal map
+    material.normalScale = new THREE.Vector2(2, 2);//Concavo convex degree
 
     return new THREE.Mesh(geometry, material);
 }
@@ -189,8 +240,7 @@ const updateSphere = (event) => {
 
 const clock = new THREE.Clock()
 
-const tick = () =>
-{
+const tick = () => {
     targetX = mouseX * 0.001;
     targetY = mouseY * 0.001;
 
@@ -202,6 +252,22 @@ const tick = () =>
     marsSphere.rotation.y += 0.5 * (targetX - marsSphere.rotation.y);
     marsSphere.rotation.x += 0.05 * (targetY - marsSphere.rotation.x);
     marsSphere.position.z += -0.05 * (targetY - marsSphere.rotation.x);
+
+    let modelRadius = 1.25;
+
+    yRotation += 0.01;
+    // t += 0.1;
+    // dx = Math.sin( t )	
+    // xPosition = x0 + dx;	
+
+    model.rotation.y = yRotation;
+
+    // model.position.x = xPosition
+    // model.position.z = zPosition
+
+    theta += 0.005;
+    model.position.x = modelRadius * -Math.cos(theta);
+    model.position.z = modelRadius * -Math.sin(theta);
 
     // Update Orbital Controls
     // controls.update()
