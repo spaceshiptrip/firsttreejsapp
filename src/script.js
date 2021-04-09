@@ -129,7 +129,7 @@ phobosShape.load(gltbModel, (gltf) => {
 
     });
 
-    gltf.scene.scale.multiplyScalar(0.001);
+    gltf.scene.scale.multiplyScalar(0.002);
 
     const box = new THREE.Box3().setFromObject(gltf.scene);
     const boxHelper = new THREE.Box3Helper(box, 0xffff00);
@@ -265,9 +265,11 @@ const tick = () => {
     // model.position.x = xPosition
     // model.position.z = zPosition
 
-    theta += 0.005;
-    model.position.x = modelRadius * -Math.cos(theta);
-    model.position.z = modelRadius * -Math.sin(theta);
+    theta -= 0.005;
+    model.position.x = modelRadius * Math.cos(theta);
+    // model.position.y = modelRadius * Math.sin(theta);
+    model.position.y = Math.sin(Math.dec);
+    model.position.z = modelRadius * Math.sin(theta);
 
     // Update Orbital Controls
     // controls.update()
