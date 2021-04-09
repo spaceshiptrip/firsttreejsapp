@@ -34,7 +34,7 @@ Features:
 1. add orbits of currently known orbiting satellites
 
 
-## Generic Run in Docker
+## Run in Docker
 ```
-docker run -d -v ${PWD}:/app -v /app/node_modules -p 8081:3000 --name orb --rm orbits
+docker run -d -v ${PWD}:/app -v /app/node_modules -p 80:8080 --name tre --rm three
 ```
