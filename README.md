@@ -32,3 +32,9 @@ Features:
 1. add SPICE NAIF 
 1. add orbit phobos and deimos  
 1. add orbits of currently known orbiting satellites
+
+
+## Generic Run in Docker
+```
+docker run -d -v ${PWD}:/app -v /app/node_modules -p 8081:3000 --name orb --rm orbits
+```
