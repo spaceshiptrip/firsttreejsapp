@@ -4,7 +4,7 @@
   "scripts": {
     "build": "webpack --config ./bundler/webpack.prod.js",
     "dev": "webpack serve --config ./bundler/webpack.dev.js",
-    "prod": "webpack serve --config ./bundler/webpack.dev.js --port 80"
+    "prod": "webpack serve --config ./bundler/webpack.dev.js --host 44.237.66.116 --port 80"
   },
   "dependencies": {
     "@babel/core": "^7.13.1",
