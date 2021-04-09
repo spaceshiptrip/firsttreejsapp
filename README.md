@@ -38,3 +38,8 @@ Features:
 ```
 docker run -d -v ${PWD}:/app -v /app/node_modules -p 80:8080 --name tre --rm three
 ```
+
+## TODO
+* Connect to SPICE for realistic orbit and rotations
+* Include SPICE starfield in the background
+* Add text at the bottom
