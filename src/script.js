@@ -61,6 +61,8 @@ material.color = new THREE.Color(0x292929)
 
 // this is the Mars Map
 const marsGeom = new THREE.SphereBufferGeometry(0.5, 64, 64);
+marsGeom.castShadow = true;
+marsGeom.receiveShadow = true;
 const marsSphere = createTextureMesh(marsGeom, '/textures/mars_1k_color.jpg', '/textures/mars_1k_normal.jpg')
 marsSphere.receiveShadow = true;
 marsSphere.castShadow = true;
@@ -82,6 +84,7 @@ const pointLight2 = new THREE.PointLight(0xffffff, 2)
 pointLight2.position.set(-6, 0.8, 3);
 // 0.8
 pointLight2.intensity = 1.37;
+pointLight2.castShadow = true;
 scene.add(pointLight2)
 
 const light1 = gui.addFolder('Light 1');
@@ -126,6 +129,9 @@ phobosShape.load(gltbModel, (gltf) => {
     gltf.scene.traverse(child => {
 
         if (child.material) child.material.metalness = 0;
+        if (child.isMesh) { child.castShadow = true; }
+        if (child.isMesh) { child.receiveShadow = true; }
+
 
     });
 
@@ -249,9 +255,9 @@ const tick = () => {
     // Update objects
     marsSphere.rotation.y = .5 * elapsedTime
 
-    marsSphere.rotation.y += 0.5 * (targetX - marsSphere.rotation.y);
-    marsSphere.rotation.x += 0.05 * (targetY - marsSphere.rotation.x);
-    marsSphere.position.z += -0.05 * (targetY - marsSphere.rotation.x);
+    // marsSphere.rotation.y += 0.5 * (targetX - marsSphere.rotation.y);
+    // marsSphere.rotation.x += 0.05 * (targetY - marsSphere.rotation.x);
+    // marsSphere.position.z += -0.05 * (targetY - marsSphere.rotation.x);
 
     let modelRadius = 1.25;
 
@@ -268,7 +274,7 @@ const tick = () => {
     theta -= 0.005;
     model.position.x = modelRadius * Math.cos(theta);
     // model.position.y = modelRadius * Math.sin(theta);
-    model.position.y = Math.sin(Math.dec);
+    // model.position.y = Math.sin(1.042);
     model.position.z = modelRadius * Math.sin(theta);
 
     // Update Orbital Controls
