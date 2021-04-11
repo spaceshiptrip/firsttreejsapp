@@ -139,7 +139,7 @@ phobosShape.load(gltbModel, (gltf) => {
 
     });
 
-    gltf.scene.scale.multiplyScalar(0.002);
+    gltf.scene.scale.multiplyScalar(0.0005);
 
     const box = new THREE.Box3().setFromObject(gltf.scene);
     const boxHelper = new THREE.Box3Helper(box, 0xffff00);
@@ -171,7 +171,7 @@ deimosShape.load(deimosGLTF, (gltf) => {
 
     });
 
-    gltf.scene.scale.multiplyScalar(0.005);
+    gltf.scene.scale.multiplyScalar(0.002);
 
     const box = new THREE.Box3().setFromObject(gltf.scene);
     const boxHelper = new THREE.Box3Helper(box, 0xffff00);
