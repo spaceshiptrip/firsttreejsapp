@@ -21,6 +21,7 @@ function createTextureMesh(geometry, image, otherImage) {
 
 ### sources
 1. Mars image maps: http://planetpixelemporium.com/mars.html#
+1. Mars real image: https://en.wikipedia.org/wiki/Moons_of_Mars
 
 # TODO
 
